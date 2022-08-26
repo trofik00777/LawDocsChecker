@@ -3,6 +3,12 @@ from navec import Navec
 import json
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 from random import choice
+import os
+
+
+os.environ["SYNONIMS"] = "../../checkpoints/synonims.ann"
+os.environ["EMBEDDINGS"] = "../../checkpoints/navec_hudlit_v1_12B_500K_300d_100q.tar"
+os.environ["WORDS"] = "../../checkpoints/words.json"
 
 
 class Augmentator(object):
@@ -11,9 +17,9 @@ class Augmentator(object):
 
     def __init__(self):
         self.model = AnnoyIndex(300, "euclidean")
-        self.model.load("weights/synonims.ann")
-        self.navec = Navec.load("../weights/navec_hudlit_v1_12B_500K_300d_100q.tar")
-        with open("../weights/words.json") as f:
+        self.model.load(os.environ["SYNONIMS"])
+        self.navec = Navec.load(os.environ["EMBEDDINGS"])
+        with open(os.environ["WORDS"]) as f:
             self.words = json.load(f)
         self.model = T5ForConditionalGeneration.from_pretrained('cointegrated/rut5-base-paraphraser')
         self.tokenizer = T5Tokenizer.from_pretrained('cointegrated/rut5-base-paraphraser')
