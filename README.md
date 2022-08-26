@@ -68,7 +68,8 @@ Responce
 
 ```bash
 export AUTHORIZATION_TOKEN={set here your athorization token}
-export SERVER_IP
+export SERVER_IP={set here your server ip}
+export API_PORT={set here your ip port}
 ```
 
 ### Installation:
