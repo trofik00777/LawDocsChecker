@@ -1,0 +1,48 @@
+import os
+import io
+
+from loguru import logger
+from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile, Form
+from fastapi.security import HTTPBearer
+import docx
+
+from .api_models import ResponseModel
+from ml.model_manager import DocManager
+
+DocApi = FastAPI()
+token_auth_scheme = HTTPBearer()
+manager = DocManager()
+
+
+@DocApi.post("/post_file")
+async def process_the_document(item: UploadFile = File(...),
+                               token: str = Depends(token_auth_scheme)
+                               ) -> ResponseModel:
+    check_authorization(token)
+
+    try:
+        contents = await item.read()
+        doc = docx.Document(io.BytesIO(contents))
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_451_UNAVAILABLE_FOR_LEGAL_REASONS,
+            detail="File is invalid",
+        )
+    finally:
+        await item.close()
+
+    logger.info('Parsing file')
+    result = manager(doc)
+    logger.info(f'{"".join(result)}')
+    info = ResponseModel()
+    info.sentences = result
+    return info
+
+
+def check_authorization(token: str) -> None:
+    if token.credentials != os.getenv('AUTHORIZATION_TOKEN'):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
