@@ -48,6 +48,3 @@ class Augmentator(object):
             if choice(range(10)) == 0:
                 text[i] = text[i] + " и " + self.find_close_word(text[i])
         return " ".join(text)
-
-
-a = Augmentator()
