@@ -54,7 +54,7 @@ class Preprocessor(object):
 if __name__ == "__main__":
     p = Preprocessor()
     print(p.lemmatizate("ноутбуком"))
-    with open("data/dataset.csv", encoding='utf-8') as fp:
+    with open("../data/dataset.csv", encoding='utf-8') as fp:
         reader = csv.reader(fp, delimiter=",", quotechar='"')
         next(reader, None)  # skip the headers
         data_read = [row for row in reader]
@@ -63,7 +63,7 @@ if __name__ == "__main__":
         for row in data_read:
             data_write.append([' '.join(p.hard_preprocess(row[0]))] + row[1:])
 
-    with open("data/preprocess_dataset.csv", "wt", encoding='utf-8') as fp:
+    with open("../data/preprocess_dataset.csv", "wt", encoding='utf-8') as fp:
         writer = csv.writer(fp, delimiter=",")
         writer.writerow(["text", "filename", "class", "data_is_okay"])  # write header
         writer.writerows(data_write)

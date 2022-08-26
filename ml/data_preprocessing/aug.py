@@ -12,8 +12,8 @@ class Augmentator(object):
     def __init__(self):
         self.model = AnnoyIndex(300, "euclidean")
         self.model.load("weights/synonims.ann")
-        self.navec = Navec.load("weights/navec_hudlit_v1_12B_500K_300d_100q.tar")
-        with open("weights/words.json") as f:
+        self.navec = Navec.load("../weights/navec_hudlit_v1_12B_500K_300d_100q.tar")
+        with open("../weights/words.json") as f:
             self.words = json.load(f)
         self.model = T5ForConditionalGeneration.from_pretrained('cointegrated/rut5-base-paraphraser')
         self.tokenizer = T5Tokenizer.from_pretrained('cointegrated/rut5-base-paraphraser')
