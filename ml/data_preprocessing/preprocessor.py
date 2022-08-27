@@ -19,7 +19,7 @@ class Preprocessor(object):
         self.stops = set(stopwords.words('russian')).union(self.alphabet)
 
     def light_preprocess(self, text):
-        pass
+        return " ".join([i for i in text.split() if "http" not in i and "www" not in i])
 
     @lru_cache(10 ** 10)
     def lemmatizate(self, word):
