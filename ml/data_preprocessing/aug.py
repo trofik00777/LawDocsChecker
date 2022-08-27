@@ -16,8 +16,8 @@ class Augmentator(object):
     добавления слов, обратный перевод """
 
     def __init__(self):
-        self.model = AnnoyIndex(300, "euclidean")
-        self.model.load(os.environ["SYNONIMS"])
+        self.annoy = AnnoyIndex(300, "euclidean")
+        self.annoy.load(os.environ["SYNONIMS"])
         self.navec = Navec.load(os.environ["EMBEDDINGS"])
         with open(os.environ["WORDS"]) as f:
             self.words = json.load(f)
@@ -30,7 +30,7 @@ class Augmentator(object):
         """Находит для слова синоним через annoy поиска ближайшего эмбеддинга в Natasha"""
         if word not in self.navec:
             return word
-        close_words_id = self.model.get_nns_by_vector(self.navec[word], 5)[1:5]
+        close_words_id = self.annoy.get_nns_by_vector(self.navec[word], 5)[1:5]
         return self.words[choice(close_words_id)]
 
     def deep_augment(self, text: str, beams=5, grams=4, do_sample=False) -> str:
