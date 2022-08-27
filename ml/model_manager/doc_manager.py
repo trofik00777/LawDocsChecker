@@ -8,6 +8,9 @@ class DocManager(BaseManager):
     def __init__(self, *kwargs):
         pass
 
-    def __call__(self, doc: Document):
-        return DocProcessor.preprocess_doc(doc)
+    def parsing_with_sentences(self, doc: Document):
+        return DocProcessor.preprocess_doc_splitted_by_sentences(doc)
+
+    def parsing_with_brackets(self, doc: Document):
+        return DocProcessor.preprocess_doc_splitted_by_brackets(doc)
 
