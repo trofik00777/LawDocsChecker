@@ -10,10 +10,10 @@ from torch import nn
 from torch.utils.data import Dataset, DataLoader
 import json
 
-BATCH_SIZE = 2
-EPOCHS = 3
+BATCH_SIZE = 32
+EPOCHS = 40
 LR = 0.001
-LOG_INTERVAL = 1
+LOG_INTERVAL = 500
 
 torch.cuda.empty_cache()
 if torch.cuda.is_available():
@@ -57,16 +57,14 @@ class CustomDataset(Dataset):
 
 df = pd.read_csv("../../ml/data/augmented_dataset.csv").dropna()[["text", "class"]]
 
-df = df[:6]
-
 tokenizer = AutoTokenizer.from_pretrained("cointegrated/rubert-tiny")
 model = BertForSequenceClassification.from_pretrained("cointegrated/rubert-tiny").to(device)
 model.classifier = nn.Linear(312, 64).to(device)
 train, test = train_test_split(df, train_size=0.8)
 train = CustomDataset(train["text"], train["class"], tokenizer)
 test = CustomDataset(test["text"], test["class"], tokenizer)
-train_dataloader = DataLoader(train, batch_size=BATCH_SIZE, shuffle=False)#, num_workers=12)
-test_dataloader = DataLoader(test, batch_size=BATCH_SIZE, shuffle=False)#, num_workers=12)
+train_dataloader = DataLoader(train, batch_size=BATCH_SIZE, shuffle=False, num_workers=12)
+test_dataloader = DataLoader(test, batch_size=BATCH_SIZE, shuffle=False, num_workers=12)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=LR)
 criterion = nn.CrossEntropyLoss()
