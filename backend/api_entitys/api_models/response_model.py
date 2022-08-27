@@ -7,3 +7,6 @@ class ResponseModel(BaseModel):
     # signs: Dict[str, str]
     # verdict: str
     parts: List[str] = Field(None, alias='docstrings')
+
+    def __init__(self):
+        super().__init__()

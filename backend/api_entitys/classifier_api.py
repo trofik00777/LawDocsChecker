@@ -8,10 +8,12 @@ import docx
 
 from .api_models import ResponseModel
 from ml.model_manager import DocManager
+from ml.models import BaseModel
 
 DocApi = FastAPI()
 token_auth_scheme = HTTPBearer()
 manager = DocManager()
+model = BaseModel()
 
 
 @DocApi.post("/post_file")
@@ -33,12 +35,17 @@ async def process_the_document(item: UploadFile = File(...),
 
     logger.info('Parsing file')
     result_parsing = manager.parsing_with_brackets(doc)
-    logger.debug(f'{"".join(result_parsing)}')
+    # logger.debug(f'{"".join(result_parsing)}')
     info = ResponseModel()
     info.parts = result_parsing
 
+    answer = {"classes": []}
+    # print(info.parts)
 
+    for text, flag in info.parts:
+        answer["classes"].append({"text": text, "label": model(text) + 1 if flag else -1})
 
+    print(answer)
 
     return info
 

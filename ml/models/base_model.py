@@ -10,7 +10,7 @@ class BaseModel(object):
             device = "cuda"
         else:
             device = "cpu"
-        self.model = torch.load("../../checkpoints/bert_v10.pt", map_location=torch.device(device))
+        self.model = torch.load("./checkpoints/bert_v10.pt", map_location=torch.device(device))
         self.model = self.model.eval()
         self.device = torch.device(device)
 

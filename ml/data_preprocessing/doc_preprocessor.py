@@ -27,7 +27,7 @@ class DocProcessor:
         for para in doc.paragraphs:
             full_text.append(para.text)
 
-        return ' '.join(full_text)
+        return '\n'.join(full_text)
 
     @classmethod
     def preprocess_doc_splitted_by_sentences(cls, doc: Document) -> List[str]:
@@ -37,8 +37,9 @@ class DocProcessor:
         return sentences
 
     @classmethod
-    def preprocess_doc_splitted_by_brackets(cls, doc: Document) -> List[str]:
+    def preprocess_doc_splitted_by_brackets(cls, doc: Document) -> List[tuple[str, bool]]:
         text = cls.get_full_text(doc)
+        logger.debug(text)
         is_right = False
         left_bracket = right_bracket = 0
         paragraphs = []
@@ -52,9 +53,10 @@ class DocProcessor:
 
                 if is_right:
                     right_bracket = i
-                    paragraphs.append(text[left_bracket + 1:right_bracket])
+                    paragraphs.append((text[left_bracket + 1:right_bracket], True))
                 else:
                     left_bracket = last_i
+                    paragraphs.append((text[right_bracket + 1:left_bracket], False))
                 is_right = not is_right
         return paragraphs
 
