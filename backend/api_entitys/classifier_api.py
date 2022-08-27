@@ -32,10 +32,14 @@ async def process_the_document(item: UploadFile = File(...),
         await item.close()
 
     logger.info('Parsing file')
-    result = manager(doc)
-    logger.info(f'{"".join(result)}')
+    result_parsing = manager.parsing_with_brackets(doc)
+    logger.debug(f'{"".join(result_parsing)}')
     info = ResponseModel()
-    info.sentences = result
+    info.parts = result_parsing
+
+
+
+
     return info
 
 
