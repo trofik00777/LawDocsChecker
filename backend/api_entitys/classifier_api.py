@@ -5,6 +5,7 @@ from loguru import logger
 from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile
 from fastapi.staticfiles import StaticFiles
 from fastapi.security import HTTPBearer
+from fastapi.middleware.cors import CORSMiddleware
 import docx
 import subprocess
 
@@ -17,6 +18,14 @@ token_auth_scheme = HTTPBearer()
 manager = DocManager()
 model = BaseModel()
 
+DocApi.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 DocApi.mount("/static", StaticFiles(directory="static"), name="static")
 
 
@@ -24,7 +33,7 @@ DocApi.mount("/static", StaticFiles(directory="static"), name="static")
 async def process_the_document(item: UploadFile = File(...),
                                token: str = Depends(token_auth_scheme)
                                ):
-    check_authorization(token)
+#     check_authorization(token)
 
     try:
         contents = await item.read()
@@ -65,7 +74,7 @@ async def process_the_document(item: UploadFile = File(...),
 async def process_the_document_inline(item: UploadFile = File(...),
                                token: str = Depends(token_auth_scheme)
                                ):
-    check_authorization(token)
+#     check_authorization(token)
     try:
         contents = await item.read()
     except Exception:
@@ -103,6 +112,7 @@ async def process_the_document_inline(item: UploadFile = File(...),
 
 
 def check_authorization(token: str) -> None:
+    print(os.getenv('AUTHORIZATION_TOKEN'), token.credentials)
     if token.credentials != os.getenv('AUTHORIZATION_TOKEN'):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
