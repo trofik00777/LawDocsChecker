@@ -4,16 +4,16 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 from sklearn.metrics import precision_score, recall_score, accuracy_score
 from sklearn.model_selection import train_test_split
-from transformers import AutoTokenizer, BertForSequenceClassification
+from transformers import AutoTokenizer, AutoModel
 import torch
 from torch import nn
 from torch.utils.data import Dataset, DataLoader
 import json
 
-BATCH_SIZE = 32
-EPOCHS = 40
+BATCH_SIZE = 64
+EPOCHS = 15
 LR = 0.001
-LOG_INTERVAL = 500
+LOG_INTERVAL = 50
 
 torch.cuda.empty_cache()
 if torch.cuda.is_available():
@@ -57,14 +57,14 @@ class CustomDataset(Dataset):
 
 df = pd.read_csv("../../ml/data/augmented_dataset.csv").dropna()[["text", "class"]]
 
-tokenizer = AutoTokenizer.from_pretrained("cointegrated/rubert-tiny")
-model = BertForSequenceClassification.from_pretrained("cointegrated/rubert-tiny").to(device)
-model.classifier = nn.Linear(312, 39).to(device)
+tokenizer = AutoTokenizer.from_pretrained("DeepPavlov/rubert-base-cased-sentence")
+model = AutoModel.from_pretrained("DeepPavlov/rubert-base-cased-sentence").to(device)
+model.classifier = nn.Linear(768, 39).to(device)
 train, test = train_test_split(df, train_size=0.8)
 train = CustomDataset(train["text"], train["class"], tokenizer)
 test = CustomDataset(test["text"], test["class"], tokenizer)
-train_dataloader = DataLoader(train, batch_size=BATCH_SIZE, shuffle=False, num_workers=12)
-test_dataloader = DataLoader(test, batch_size=BATCH_SIZE, shuffle=False, num_workers=12)
+train_dataloader = DataLoader(train, batch_size=BATCH_SIZE, shuffle=False)#, num_workers=12)
+test_dataloader = DataLoader(test, batch_size=BATCH_SIZE, shuffle=False)#, num_workers=12)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=LR)
 criterion = nn.CrossEntropyLoss()
@@ -81,7 +81,7 @@ for epoch in range(1, EPOCHS + 1):
         attention_mask = data["attention_mask"].to(device)
         targets = data["targets"]
         y_pred = model(input_ids=input_ids, attention_mask=attention_mask)
-        loss = criterion(y_pred.logits.cpu(), targets)
+        loss = criterion(y_pred.pooler_output, targets)
         loss.backward()
         nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
         optimizer.step()
@@ -90,7 +90,7 @@ for epoch in range(1, EPOCHS + 1):
         if ind % LOG_INTERVAL == 0:
             print(f"{ind}/{k} loss: {loss}")
     metrics["train_loss"].append(sum(losses) / len(losses))
-    torch.save(model, "../../checkpoints/bert_v" + str(epoch) + ".pt")
+    torch.save(model, "../../checkpoints/DP_bert" + str(epoch) + ".pt")
     model = model.eval()
     predictions = []
     values = []
