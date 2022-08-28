@@ -59,7 +59,7 @@ df = pd.read_csv("../../ml/data/augmented_dataset.csv").dropna()[["text", "class
 
 tokenizer = AutoTokenizer.from_pretrained("cointegrated/rubert-tiny")
 model = BertForSequenceClassification.from_pretrained("cointegrated/rubert-tiny").to(device)
-model.classifier = nn.Linear(312, 64).to(device)
+model.classifier = nn.Linear(312, 39).to(device)
 train, test = train_test_split(df, train_size=0.8)
 train = CustomDataset(train["text"], train["class"], tokenizer)
 test = CustomDataset(test["text"], test["class"], tokenizer)
