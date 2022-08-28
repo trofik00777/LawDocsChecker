@@ -1,1 +1,1 @@
-from .doc_preprocessor import DocProcessor
+from .doc_preprocessor import DocProcessor, InlineDocProcessor
