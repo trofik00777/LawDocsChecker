@@ -3,7 +3,7 @@ import pickle
 
 class RecForest(object):
     def __init__(self):
-        with open("../../checkpoints/rec_forest.pkl", "rb") as f:
+        with open("./checkpoints/rec_forest.pkl", "rb") as f:
             self.model = pickle.load(f)
 
     def hard_requirements(self, x):

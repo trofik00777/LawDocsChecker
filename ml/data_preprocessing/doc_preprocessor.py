@@ -10,9 +10,10 @@ from docx.shared import RGBColor
 import nltk
 from nltk.corpus import stopwords
 
-from ml.models import BaseModel
+from ml.models import BaseModel, RecForest
 
 model_base = BaseModel()
+rec = RecForest()
 TOKENS_BY_NUMBER_LABEL = {}
 COLORS = [
     (94, 217, 219),
@@ -136,19 +137,21 @@ class InlineDocProcessor:
     @classmethod
     def process(cls, doc: Document):
         json = {"classes": []}
+        counter = [0 for _ in range(39)]
         for paragraph in doc.paragraphs:
             if "{" in paragraph.text:
                 parts = DocProcessor.get_paragraphs(paragraph.text)
                 paragraph.text = ""
                 for txt, is_classifier in parts:
-                    print(txt)
-                    print("-" * 100)
+                    # print(txt)
+                    # print("-" * 100)
                     if is_classifier:
                         label = model_base(txt) + 1
                         run = paragraph.add_run(txt)
                         run.font.color.rgb = RGBColor(*COLORS[label - 1])
 
                         json["classes"].append({"text": txt, "label": label})
+                        counter[label - 1] += 1
                     else:
                         paragraph.add_run(txt)
 
@@ -157,6 +160,7 @@ class InlineDocProcessor:
                 json["classes"].append({"text": paragraph.text, "label": -1})
         doc.save(f"./static/{cls.num_file}.docx")
         json["filename"] = f"{cls.num_file}.docx"
+        json["is_valid"] = rec(counter)
         cls.num_file += 1
 
         return json
