@@ -69,11 +69,12 @@ test_dataloader = DataLoader(test, batch_size=BATCH_SIZE, shuffle=False, num_wor
 optimizer = torch.optim.Adam(model.parameters(), lr=LR)
 criterion = nn.CrossEntropyLoss()
 
+model = torch.load("../../checkpoints/bert_v40.pt")
 
 device = torch.device(device)
 k = len(train) // BATCH_SIZE
 metrics = {"train_loss": [], "test_acc": [], "test_precision": [], "test_recall": []}
-for epoch in range(1, EPOCHS + 1):
+for epoch in range(41, 101):
     losses = []
     model = model.train()
     for ind, data in enumerate(train_dataloader):
