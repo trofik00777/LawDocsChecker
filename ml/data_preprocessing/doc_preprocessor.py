@@ -64,7 +64,7 @@ russian_stopwords = stopwords.words("russian")
 patterns = re.compile(r"[A-Za-z0-9!#$%&'()*+,./:;<=>?@[\]^_`{|}~—\"\-]+")
 split_regex = re.compile(r'[.|!|?|…]')
 
-COUNT_POSSIBLE_CHARS_BETWEEN_BRACKETS = 2
+COUNT_POSSIBLE_CHARS_BETWEEN_BRACKETS = 3
 
 
 class DocProcessor:
@@ -96,6 +96,7 @@ class DocProcessor:
                     last_i = i + text[i:i + COUNT_POSSIBLE_CHARS_BETWEEN_BRACKETS + 2].index("}")
                 except Exception as e:
                     logger.error(f"There are no bracket at '{text[i:i + 10]}'")
+                    continue
 
                 if is_right:
                     right_bracket = i
