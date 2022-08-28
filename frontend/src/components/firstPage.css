@@ -1,0 +1,82 @@
+/* Animations */
+@-webkit-keyframes bg-scrolling-reverse {
+	100% { background-position: 100vw 100vh; }
+}
+@-moz-keyframes    bg-scrolling-reverse {
+	100% { background-position: 100vw 100vh; }
+}
+@-o-keyframes      bg-scrolling-reverse {
+	100% { background-position: 100vw 100vh; }
+}
+@keyframes         bg-scrolling-reverse {
+	100% { background-position: 100vw 100vh; }
+}
+
+@-webkit-keyframes bg-scrolling {
+	0% { background-position: 100vw 100vh; }
+}
+@-moz-keyframes    bg-scrolling {
+	0% { background-position: 100vw 100vh; }
+}
+@-o-keyframes      bg-scrolling {
+	0% { background-position: 100vw 100vh; }
+}
+@keyframes         bg-scrolling {
+	0% { background-position: 100vw 100vh; }
+}
+
+.p-file-loader {
+	height: 100vh;
+	width:100%;
+	display: grid;
+	place-content: center;
+	/*background: #fafafa;*/
+
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAABnSURBVHja7M5RDYAwDEXRDgmvEocnlrQS2SwUFST9uEfBGWs9c97nbGtDcquqiKhOImLs/UpuzVzWEi1atGjRokWLFi1atGjRokWLFi1atGjRokWLFi1af7Ukz8xWp8z8AAAA//8DAJ4LoEAAlL1nAAAAAElFTkSuQmCC) repeat 0 0;
+	-webkit-animation: bg-scrolling-reverse 30.92s infinite;
+	-moz-animation: bg-scrolling-reverse 30.92s infinite;
+	-o-animation: bg-scrolling-reverse 30.92s infinite;
+	animation: bg-scrolling-reverse 30.92s infinite;
+	-webkit-animation-timing-function: linear;
+	-moz-animation-timing-function: linear;
+	-o-animation-timing-function: linear;
+	animation-timing-function: linear;
+}
+
+.p-file-loader .window {
+	background: white;
+	height: 300px;
+	width:700px;
+	border: 1px solid #bbbbeb;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.p-file-loader .window h2 {
+	margin-bottom: 1rem;
+	color: #ef6d3e;
+	font-size: 1.875rem;
+	line-height: 1.4;
+	margin-top: 16px;
+}
+
+
+.p-file-loader .window .uploadButton {
+	padding: 11px 24px 17px;
+	background-color: #ef6d3e;
+	color: #fff;
+	font-size: 35px;
+	border: 0;
+	border-radius: 100%;
+	display: grid;
+	place-content: center;
+	font-weight: 500;
+	margin: 38px;
+	cursor: pointer;
+}
+
+.p-file-loader .window .buttonDesc {
+	font-size: 1.1em;
+	color: #A7A8AD;
+}
