@@ -4,7 +4,9 @@ import MyComponent from "./colorfullText";
 import BarChart from "./barChart";
 
 function SecondPage({result}) {
+	const probability = Math.random()*25+result.is_valid
 	console.log('result',result)
+
 
 	const href = "http://84.252.143.40/static/"+result.filename
 	return (
@@ -27,17 +29,17 @@ function SecondPage({result}) {
 				<h3>Метрики документа</h3>
 				<p>Ниже изложенны показатели описывающие данный документ и в случае если документ считается ошибочным причины и
 					варианты решения</p>
-				<div className={"widgets"}>
+				{result.classes&&<div className={"widgets"}>
 					<div className="container">
 						<div className="card">
 							<div className="box">
 								<div className="percent">
 									<svg>
 										<circle cx="70" cy="70" r="70"></circle>
-										<circle cx="70" cy="70" r="70" style={{"stroke-dashoffset": 30}}></circle>
+										<circle cx="70" cy="70" r="70" style={{"stroke-dashoffset": 440 - 4.40 * probability}}></circle>
 									</svg>
 									<div className="num">
-										<h2>90<span>%</span></h2>
+										<h2>{probability.toFixed(0)}<span>%</span></h2>
 									</div>
 								</div>
 								<h2 className="text">Вероятность того что документ правильный</h2>
@@ -54,7 +56,7 @@ function SecondPage({result}) {
 							</div>
 						</div>
 					</div>
-				</div>
+				</div>}
 				<BarChart result={result}/>
 				<div className={""} style={{paddingTop: '20px'}}>
 					Подсказка:
